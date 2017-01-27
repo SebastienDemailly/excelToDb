@@ -1,0 +1,22 @@
+{
+    "name": "exceltoDb",
+    "version": "1.0.0",
+    "description": "insert XLSX to BDD",
+    "main": "index.js",
+    "dependencies": {
+        "convert-excel-to-json": "^1.0.0",
+        "underscore": "^1.8.3"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "start": "node index.js"
+    },
+    "keywords": [
+        "DB",
+        "EXCEL",
+        "XLSX",
+        "JSON"
+    ],
+    "author": "Sebastien",
+    "license": "SEE LICENCE IN ARVATO"
+}
