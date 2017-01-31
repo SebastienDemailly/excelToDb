@@ -1,22 +1,79 @@
 {
-    "name": "exceltoDb",
-    "version": "1.0.0",
-    "description": "insert XLSX to BDD",
-    "main": "index.js",
-    "dependencies": {
-        "convert-excel-to-json": "^1.0.0",
-        "underscore": "^1.8.3"
-    },
-    "devDependencies": {},
-    "scripts": {
-        "start": "node index.js"
-    },
-    "keywords": [
-        "DB",
-        "EXCEL",
-        "XLSX",
-        "JSON"
-    ],
-    "author": "Sebastien",
-    "license": "SEE LICENCE IN ARVATO"
+  "_args": [
+    [{
+        "raw": "excel-to-db@git+ssh://git@github.com/SebastienDemailly/excelToDb.git",
+        "scope": null,
+        "escapedName": "excel-to-db",
+        "name": "excel-to-db",
+        "rawSpec": "git+ssh://git@github.com/SebastienDemailly/excelToDb.git",
+        "spec": "git+ssh://git@github.com/SebastienDemailly/excelToDb.git",
+        "type": "hosted",
+        "hosted": {
+          "type": "github",
+          "ssh": "git@github.com:SebastienDemailly/excelToDb.git",
+          "sshUrl": "git+ssh://git@github.com/SebastienDemailly/excelToDb.git",
+          "httpsUrl": "git+https://github.com/SebastienDemailly/excelToDb.git",
+          "gitUrl": "git://github.com/SebastienDemailly/excelToDb.git",
+          "shortcut": "github:SebastienDemailly/excelToDb",
+          "directUrl": "https://raw.githubusercontent.com/SebastienDemailly/excelToDb/master/package.json"
+        }
+      },
+      "C:\\Users\\DEMA022\\Documents\\Atom projets\\colisage-server"
+    ]
+  ],
+  "_from": "git+ssh://git@github.com/SebastienDemailly/excelToDb.git",
+  "_id": "exceltoDb@1.0.0",
+  "_inCache": true,
+  "_location": "/exceltoDb",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "excel-to-db@git+ssh://git@github.com/SebastienDemailly/excelToDb.git",
+    "scope": null,
+    "escapedName": "excel-to-db",
+    "name": "excel-to-db",
+    "rawSpec": "git+ssh://git@github.com/SebastienDemailly/excelToDb.git",
+    "spec": "git+ssh://git@github.com/SebastienDemailly/excelToDb.git",
+    "type": "hosted",
+    "hosted": {
+      "type": "github",
+      "ssh": "git@github.com:SebastienDemailly/excelToDb.git",
+      "sshUrl": "git+ssh://git@github.com/SebastienDemailly/excelToDb.git",
+      "httpsUrl": "git+https://github.com/SebastienDemailly/excelToDb.git",
+      "gitUrl": "git://github.com/SebastienDemailly/excelToDb.git",
+      "shortcut": "github:SebastienDemailly/excelToDb",
+      "directUrl": "https://raw.githubusercontent.com/SebastienDemailly/excelToDb/master/package.json"
+    }
+  },
+  "_requiredBy": [],
+  "_resolved": "git+ssh://git@github.com/SebastienDemailly/excelToDb.git#042cf28eae63142bf3fc93c8e19672050095c17e",
+  "_shasum": "dfd11537e37cb390f0477ca093fbe50889593d2e",
+  "_shrinkwrap": null,
+  "_spec": "excel-to-db@git+ssh://git@github.com/SebastienDemailly/excelToDb.git",
+  "_where": "C:\\Users\\DEMA022\\Documents\\Atom projets\\colisage-server",
+  "author": {
+    "name": "Sebastien"
+  },
+  "dependencies": {
+    "async": "^2.1.4",
+    "convert-excel-to-json": "^1.0.0",
+    "underscore": "^1.8.3"
+  },
+  "description": "insert XLSX to BDD",
+  "devDependencies": {},
+  "gitHead": "042cf28eae63142bf3fc93c8e19672050095c17e",
+  "keywords": [
+    "DB",
+    "EXCEL",
+    "XLSX",
+    "JSON"
+  ],
+  "license": "SEE LICENCE IN ARVATO",
+  "main": "index.js",
+  "name": "exceltoDb",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "version": "1.0.0"
 }

@@ -1,3 +1,8 @@
-var excelToDb = require('./excelToDb');
+var excelToJson = require('./excelToJson');
+var jsonToDb = require('./jsonToDb');
 
-excelToDb.excelIntegrationDb("exemple.xlsx");
+module.exports = {
+  excelIntegrationDb: function(excelFilePath) {
+    return bResult = jsonToDb.insert(excelToJson.convert(excelFilePath));
+  }
+}

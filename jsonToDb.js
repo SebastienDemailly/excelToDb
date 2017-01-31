@@ -1,103 +1,325 @@
 var _ = require('underscore');
 //http://underscorejs.org/
+var asyncc = require('async');
+
+var initReferencesTypes = function(json) {
+  console.log("********** Insertion ReferencesTypes Début **********")
+    // insertion des référencesTypes
+  return new Promise(function(resolve, reject) {
+    var tabReferencesTypes = [];
+    var referenceTypes = (_.uniq(_.pluck(json.candidats, 'label')));
+    for (referenceType of referenceTypes) {
+      tabReferencesTypes.push(
+        ReferenceType.create({
+          label: referenceType
+        })
+      );
+    }
+    Promise.all(tabReferencesTypes).then(function(res) {
+      console.log("********** Insertion ReferencesTypes Fin **********")
+      return resolve(res);
+    }).catch(function(err) {
+      console.log("********** Insertion ReferencesTypes Erreur **********")
+      return reject(err);
+    })
+  })
+}
+
+var initFormats = function(json) {
+  console.log("********** Insertion Format Début **********")
+    //    insertion des format
+  return new Promise(function(resolve, reject) {
+    var tabFormats = [];
+    var formats = (_.uniq(_.pluck(json.candidats, 'paperSize')))
+    for (format of formats) {
+      tabFormats.push(
+        Format.create({
+          label: format
+        })
+      );
+    }
+    Promise.all(tabFormats).then(function(res) {
+      console.log("********** Insertion Format Fin **********")
+      return resolve(res);
+    }).catch(function(err) {
+      console.log("********** Insertion Format Erreur **********")
+      return reject(err);
+    })
+  })
+}
+
+var initReferences = function(json) {
+  return new Promise(function(resolve, reject) {
+    console.log("********** Insertion References Début **********")
+      // insertion des  references
+    var tabReferences = [];
+    var tabFormats = [];
+    var tabReferencesTypes = [];
+
+    for (reference of json.candidats) {
+      tabFormats.push(researchFormatId(reference.paperSize));
+      tabReferencesTypes.push(researchReferenceTypeId(reference.label));
+    }
+    Promise.all(tabFormats).then(function(resFormats) {
+      Promise.all(tabReferencesTypes).then(function(resReferencesTypes) {
+        for (var i = 0; i < json.candidats.length; i++) {
+          tabReferences.push(
+            Reference.create({
+              id: json.candidats[i].id,
+              party: json.candidats[i].party,
+              listNumber: json.candidats[i].listNumber,
+              reference: json.candidats[i].reference,
+              paperWeight: json.candidats[i].paperWeight,
+              FormatId: resFormats[i],
+              ReferenceTypeId: resReferencesTypes[i]
+            })
+          )
+        }
+      }).then(function() {
+        Promise.all(tabReferences).then(function(res) {
+          console.log("********** Insertion References Fin **********")
+          return resolve(res);
+        }).catch(function(err) {
+          console.log("********** Insertion References Erreurs **********")
+          return reject(err);
+        })
+      })
+    })
+  })
+}
+
+var researchFormatId = function(formatLabel) {
+  // recherche l'id format selon le libellé du format passé en paramètres
+  return new Promise(function(resolve, reject) {
+    Format.find({
+        attributes: ["id"],
+        where: {
+          label: formatLabel
+        }
+      }).then(function(res) {
+        return resolve(res.id);
+      })
+      .catch(function(err) {
+        console.log("********** research Format Erreur **********")
+        return reject(err);
+      });
+  })
+}
+
+var researchReferenceTypeId = function(referenceTypeLabel) {
+  // recherche l'id referenceType selon le libellé du format passé en paramètres
+  return new Promise(function(resolve, reject) {
+    ReferenceType.find({
+        attributes: ["id"],
+        where: {
+          label: referenceTypeLabel
+        }
+      }).then(function(res) {
+        return resolve(res.id);
+      })
+      .catch(function(err) {
+        console.log("********** research Reference Erreur **********")
+        return reject(err);
+      });
+  });
+}
+
+var initDistributors = function(json) {
+  console.log("********** Insertion Distributors Début **********")
+    //    insertion des distributors
+  return new Promise(function(resolve, reject) {
+    var tabDistributors = [];
+    var distributors = (_.uniq(_.pluck(json.communes, 'distributor')))
+    for (distributor of distributors) {
+      tabDistributors.push(
+        Distributor.create({
+          label: distributor
+        })
+      );
+    }
+    Promise.all(tabDistributors).then(function(res) {
+      console.log("********** Insertion Distributors Fin **********")
+      return resolve(res);
+    }).catch(function(err) {
+      console.log("********** Insertion Distributors Erreur **********")
+      return reject(err);
+    })
+  })
+}
+
+var initDistricts = function(json) {
+  console.log("********** Insertion Districts Début **********")
+    //    insertion des districts
+  return new Promise(function(resolve, reject) {
+    var tabDistricts = [];
+    var districts = (_.uniq(_.pluck(json.communes, 'leadDistributor')))
+    for (district of districts) {
+      tabDistricts.push(
+        District.create({
+          label: district
+        })
+      )
+    }
+    Promise.all(tabDistricts).then(function(res) {
+      console.log("********** Insertion Districts Fin **********")
+      return resolve(res);
+    }).catch(function(err) {
+      console.log("********** Insertion Districts Erreur **********")
+      return reject(err);
+    })
+  })
+}
+
+var researchDistrictId = function(districtLabel) {
+  // recherche l'id district selon le libellé du district passé en paramètres
+  return new Promise(function(resolve, reject) {
+    District.find({
+        attributes: ["id"],
+        where: {
+          label: districtLabel
+        }
+      }).then(function(res) {
+        return resolve(res.id);
+      })
+      .catch(function(err) {
+        console.log("********** research District Erreur **********")
+        return reject(err);
+      });
+  });
+}
+
+var researchDistributorId = function(distributorLabel) {
+  // recherche l'id distributor selon le libellé du distributor passé en paramètres
+  return new Promise(function(resolve, reject) {
+    Distributor.find({
+        attributes: ["id"],
+        where: {
+          label: distributorLabel
+        }
+      }).then(function(res) {
+        return resolve(res.id);
+      })
+      .catch(function(err) {
+        console.log("********** research Distributor Erreur **********")
+        return reject(err);
+      });
+  });
+}
+
+var initCities = function(json) {
+  return new Promise(function(resolve, reject) {
+    console.log("********** Insertion Cities Début **********")
+      // insertion des  cities
+    var tabCities = [];
+    var tabDistributors = [];
+    var tabDistricts = [];
+
+    for (city of json.communes) {
+      tabDistributors.push(researchDistributorId(city.distributor));
+      tabDistricts.push(researchDistrictId(city.leadDistributor));
+    }
+    Promise.all(tabDistributors).then(function(resDistributors) {
+      Promise.all(tabDistricts).then(function(resDistricts) {
+        for (var i = 0; i < json.communes.length; i++) {
+          tabCities.push(
+            City.create({
+              inseeCode: json.communes[i].inseeCode,
+              cantonCode: json.communes[i].cantonCode,
+              city: json.communes[i].city,
+              arrondissement: json.communes[i].arrondissement,
+              email: json.communes[i].email,
+              address: json.communes[i].address,
+              postCode: json.communes[i].postCode,
+              contact: json.communes[i].contact,
+              phone: json.communes[i].phone,
+              openingHours: json.communes[i].openingHours,
+              elector: json.communes[i].elector,
+              quantity: json.communes[i].quantity,
+              DistributorId: resDistributors[i],
+              DistrictId: resDistricts[i]
+            })
+          )
+        }
+      }).then(function() {
+        Promise.all(tabCities).then(function(res) {
+          console.log("********** Insertion Cities Fin **********")
+          return resolve(res);
+        }).catch(function(err) {
+          console.log("********** Insertion Cities Erreurs **********")
+          return reject(err);
+        })
+      })
+    })
+  })
+}
+
+var researchCityId = function(CityInsee) {
+  // recherche l'id City selon le code insee de city passé en paramètres
+  return new Promise(function(resolve, reject) {
+    City.find({
+        attributes: ["id"],
+        where: {
+          inseeCode: CityInsee
+        }
+      }).then(function(res) {
+        return resolve(res.id);
+      })
+      .catch(function(err) {
+        console.log("********** research City Erreur **********")
+        return reject(err);
+      });
+  });
+}
+
+var initCityReferences = function(json) {
+  return new Promise(function(resolve, reject) {
+    console.log("********** Insertion CityReferences Début **********")
+      // insertion des  cityReferences
+    var tabCityReferences = [];
+    var tabCities = [];
+
+    for (cityReference of json.insertion) {
+      tabCities.push(researchCityId(cityReference.inseeCode));
+    }
+    Promise.all(tabCities).then(function(resCities) {
+      for (var i = 0; i < json.insertion.length; i++) {
+        tabCityReferences.push(
+          CityReference.create({
+            insertion: json.insertion[i].insertion,
+            ReferenceId: json.insertion[i].referenceId,
+            CityId: resCities[i]
+          })
+        )
+      }
+    }).then(function() {
+      Promise.all(tabCityReferences).then(function(res) {
+        console.log("********** Insertion CityReferences Fin **********")
+        return resolve(res);
+      }).catch(function(err) {
+        console.log("********** Insertion CityReferences Erreurs **********")
+        return reject(err);
+      })
+    })
+  })
+}
 
 module.exports = {
-    insert: function(json) {
-        // ouvrir une transaction
-
-        // insertion des référencesTypes
-        var referenceTypes = (_.uniq(_.pluck(json.candidats, 'label')))
-        for (referenceType of referenceTypes) {
-            console.log("Insertion referenceTypes :" + "label: " + referenceType)
-                /*  ReferenceType.create({
-                      label: referencesType
-                  });*/
-        };
-
-        // insertion des format
-        var formats = (_.uniq(_.pluck(json.candidats, 'paperSize')))
-        for (format of formats) {
-            console.log("Insertion formats :" + "paperSize: " + format)
-                /*Format.create({
-                    label: format
-                });*/
-        };
-
-        // insertion des bureaux distributeurs
-        var distributors = (_.uniq(_.pluck(json.communes, 'distributor')))
-        for (distributor of distributors) {
-            console.log("Insertion distributors :" + "distributor: " + distributor)
-                /*Distributor.create({
-                    label: distributor
-                });*/
-        };
-
-        // insertion des  districts
-        var districts = (_.uniq(_.pluck(json.communes, 'leadDistributor')))
-        for (district of districts) {
-            console.log("Insertion districts :" + "leadDistributor: " + district)
-                /*District.create({
-                    label: district
-                });*/
-        };
-
-        // insertion des  cities
-        for (city of json.communes) {
-            // récupération de l'idDistributor
-            console.log("SELECT id FROM distributor WHERE label = " + city.distributor);
-            // récupération de l'idDistrict
-            console.log("SELECT id FROM district WHERE label = " + city.leadDistributor);
-            console.log("Insertion cities :" + city.inseeCode + " | " + city.cantonCode + " | " + city.city + " | " + city.arrondissement + " | " + city.email + " | " + city.address + " | " + city.postCode + " | " + city.contact + " | " + city.phone + " | " + city.openingHours + " | " + city.elector + " | " + city.quantity);
-            /*City.create({
-            inseeCode: city.inseeCode,
-            cantonCode: city.cantonCode,
-            city: city.city,
-            arrondissement: city.arrondissement,
-            email: city.email,
-            address: city.address,
-            postCode: city.postCode,
-            contact: city.contact,
-            phone: city.phone,
-            openingHours: city.openingHours,
-            elector: city.elector,
-            quantity: city.quantity,
-            idDistributor : "L'ID DE LA REQUETE DE RECUPERATION",
-            idDistrict : "L'ID DE LA REQUETE DE RECUPERATION"
-            });*/
-        };
-
-        // insertion des  references
-        for (reference of json.candidats) {
-            // récupération de l'idReferenceType
-            console.log("SELECT id FROM referencetype WHERE label = " + reference.label);
-            // récupération de l'idFormat
-            console.log("SELECT id FROM format WHERE paperSize = " + reference.paperSize);
-            console.log("Insertion references :" + reference.id + " | " + reference.party + " | " + reference.listNumber + " | " + reference.reference + " | " + reference.paperWeight);
-            /*Reference.create({
-            id: reference.id,
-            party: reference.party,
-            listNumber: reference.listNumber,
-            reference: reference.reference,
-            paperWeight: reference.paperWeight,
-            idFormat: "L'ID DE LA REQUETE DE RECUPERATION",
-            idCandidat: "L'ID DE LA REQUETE DE RECUPERATION"
-            });*/
-        };
-
-        // insertion des  cityReferences
-        for (cityReference of json.insertion) {
-            // récupération de l'idReference
-            console.log("SELECT id FROM reference WHERE id = " + cityReference.candidatNumber);
-            // récupération de l'idCity
-            console.log("SELECT id FROM city WHERE inseeCode = " + cityReference.inseeCode);
-            console.log("Insertion cityReferences :" + cityReference.insertion);
-            /*CityReference.create({
-            insertion: cityReference.insertion,
-            inseeCode: "L'ID DE LA REQUETE DE RECUPERATION",
-            candidatNumber: "L'ID DE LA REQUETE DE RECUPERATION"
-            });*/
-        };
-        // fermer la transaction
-        return true;
-    }
+  insert: function(json) {
+    console.log("--------------------- DEBUT INSERTION BDD ---------------------")
+    initReferencesTypes(json).then(function() {
+      initFormats(json).then(function() {
+        initReferences(json).then(function() {
+          initDistributors(json).then(function() {
+            initDistricts(json).then(function() {
+              initCities(json).then(function() {
+                initCityReferences(json).then(function() {
+                  console.log("--------------------- FIN INSERTION BDD ---------------------")
+                })
+              })
+            })
+          })
+        })
+      })
+    })
+  }
 }
