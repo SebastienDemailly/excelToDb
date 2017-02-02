@@ -124,7 +124,7 @@ var researchReferenceTypeId = function(referenceTypeLabel) {
   });
 }
 
-var initDistributors = function(json) {
+var initDistributors = function(json, orderId) {
   console.log("********** Insertion Distributors Début **********")
     //    insertion des distributors
   return new Promise(function(resolve, reject) {
@@ -134,6 +134,7 @@ var initDistributors = function(json) {
       tabDistributors.push(
         Distributor.create({
           label: distributor
+          OrderId: orderId
         })
       );
     }
@@ -304,13 +305,13 @@ var initCityReferences = function(json) {
 }
 
 module.exports = {
-  insert: function(json) {
+  insert: function(json, orderId) {
     console.log("--------------------- DEBUT INSERTION BDD ---------------------")
     initReferencesTypes(json).then(function() {
       initFormats(json).then(function() {
         initReferences(json).then(function() {
           initDistributors(json).then(function() {
-            initDistricts(json).then(function() {
+            initDistricts(json, orderId).then(function() {
               initCities(json).then(function() {
                 initCityReferences(json).then(function() {
                   console.log("--------------------- FIN INSERTION BDD ---------------------")
