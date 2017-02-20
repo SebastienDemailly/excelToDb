@@ -2,9 +2,35 @@ var _ = require('underscore');
 //http://underscorejs.org/
 var asyncc = require('async');
 
+module.exports = {
+    insert: function(json, orderId) {
+        return new Promise(function(resolve, reject) {
+                console.log("--------------------- DEBUT INSERTION BDD ---------------------")
+                initReferencesTypes(json).then(function() {
+                    return initFormats(json)
+                }).then(function() {
+                    return initReferences(json)
+                }).then(function() {
+                    return initDistributors(json)
+                }).then(function() {
+                    return initDistricts(json, orderId)
+                }).then(function() {
+                    return initCities(json)
+                }).then(function() {
+                    return initCityReferences(json)
+                }).then(function() {
+                    console.log("--------------------- FIN INSERTION BDD ---------------------")
+                    return resolve(true);
+                }).catch(function(err) {
+                    reject(err);
+                })
+            }
+        })
+}
+
 var initReferencesTypes = function(json) {
     console.log("********** Insertion ReferencesTypes Début **********")
-        // insertion des référencesTypes
+    // insertion des référencesTypes
     return new Promise(function(resolve, reject) {
         var tabReferencesTypes = [];
         var referenceTypes = (_.uniq(_.pluck(json.candidats, 'label')));
@@ -27,7 +53,7 @@ var initReferencesTypes = function(json) {
 
 var initFormats = function(json) {
     console.log("********** Insertion Format Début **********")
-        //    insertion des format
+    //    insertion des format
     return new Promise(function(resolve, reject) {
         var tabFormats = [];
         var formats = (_.uniq(_.pluck(json.candidats, 'paperSize')))
@@ -51,7 +77,7 @@ var initFormats = function(json) {
 var initReferences = function(json) {
     return new Promise(function(resolve, reject) {
         console.log("********** Insertion References Début **********")
-            // insertion des  references
+        // insertion des  references
         var tabReferences = [];
         var tabFormats = [];
         var tabReferencesTypes = [];
@@ -126,7 +152,7 @@ var researchReferenceTypeId = function(referenceTypeLabel) {
 
 var initDistributors = function(json) {
     console.log("********** Insertion Distributors Début **********")
-        //    insertion des distributors
+    //    insertion des distributors
     return new Promise(function(resolve, reject) {
         var tabDistributors = [];
         var distributors = (_.uniq(_.pluck(json.communes, 'distributor')))
@@ -149,7 +175,7 @@ var initDistributors = function(json) {
 
 var initDistricts = function(json, orderId) {
     console.log("********** Insertion Districts Début **********")
-        //    insertion des districts
+    //    insertion des districts
     return new Promise(function(resolve, reject) {
         var tabDistricts = [];
         var districts = (_.uniq(_.pluck(json.communes, 'leadDistributor')))
@@ -210,7 +236,7 @@ var researchDistributorId = function(distributorLabel) {
 var initCities = function(json) {
     return new Promise(function(resolve, reject) {
         console.log("********** Insertion Cities Début **********")
-            // insertion des  cities
+        // insertion des  cities
         var tabCities = [];
         var tabDistributors = [];
         var tabDistricts = [];
@@ -275,7 +301,7 @@ var researchCityId = function(CityInsee) {
 var initCityReferences = function(json) {
     return new Promise(function(resolve, reject) {
         console.log("********** Insertion CityReferences Début **********")
-            // insertion des  cityReferences
+        // insertion des  cityReferences
         var tabCityReferences = [];
         var tabCities = [];
 
@@ -302,25 +328,4 @@ var initCityReferences = function(json) {
             })
         })
     })
-}
-
-module.exports = {
-    insert: function(json, orderId) {
-        console.log("--------------------- DEBUT INSERTION BDD ---------------------")
-        initReferencesTypes(json).then(function() {
-            initFormats(json).then(function() {
-                initReferences(json).then(function() {
-                    initDistributors(json).then(function() {
-                        initDistricts(json, orderId).then(function() {
-                            initCities(json).then(function() {
-                                initCityReferences(json).then(function() {
-                                    console.log("--------------------- FIN INSERTION BDD ---------------------")
-                                })
-                            })
-                        })
-                    })
-                })
-            })
-        })
-    }
 }
