@@ -26,32 +26,6 @@ module.exports = {
     }
 }
 
-module.exports = {
-    insert: function(json, orderId) {
-        return new Promise(function(resolve, reject) {
-            console.log("--------------------- DEBUT INSERTION BDD ---------------------")
-            initReferencesTypes(json).then(function(resReferencesTypes) {
-                return initFormats(json)
-            }).then(function() {
-                return initReferences(json)
-            }).then(function() {
-                return initDistributors(json)
-            }).then(function() {
-                return initDistricts(json, orderId)
-            }).then(function() {
-                return initCities(json)
-            }).then(function() {
-                return initCityReferences(json)
-            }).then(function() {
-                console.log("--------------------- FIN INSERTION BDD ---------------------")
-                return resolve(true);
-            }).catch(function(err) {
-                reject(err);
-            })
-        })
-    }
-}
-
 var initReferencesTypes = function(json) {
     console.log("********** Insertion ReferencesTypes Début **********")
     // insertion des référencesTypes
