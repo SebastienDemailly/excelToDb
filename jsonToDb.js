@@ -79,8 +79,9 @@ var initReferences = function(json, referencesTypes, formats) {
         var tabReferences = [];
         var tabFormats = [];
         var tabReferencesTypes = [];
-
+        console.log(json)
         for (reference of json.candidats) {
+            console.log("reference ", reference)
             tabFormats.push(researchFormatId(formats, reference.paperSize));
             tabReferencesTypes.push(researchReferenceTypeId(referencesTypes, reference.label));
         }
@@ -114,8 +115,10 @@ var initReferences = function(json, referencesTypes, formats) {
 
 var researchFormatId = function(tabFormats, formatLabel) {
     // recherche l'id format selon le libellé
+    console.log(tabFormats)
     for (formats of tabFormats) {
         if (formats.format.label == formatLabel) {
+            console.log("format ", formats.format.id)
             return formats.format.id;
         }
     }
