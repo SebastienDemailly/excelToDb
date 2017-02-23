@@ -6,7 +6,31 @@ module.exports = {
     insert: function(json, orderId) {
         return new Promise(function(resolve, reject) {
             console.log("--------------------- DEBUT INSERTION BDD ---------------------")
-            initReferencesTypes(json).then(function() {
+            initReferencesTypes(json).then(function(resReferencesTypes) {
+                initFormats(json).then(function(resFormats) {
+                    initReferences(json, resReferencesTypes, resFormats).then(function() {
+                        initDistributors(json).then(function() {
+                            initDistricts(json, orderId).then(function() {
+                                initCities(json).then(function() {
+                                    initCityReferences(json).then(function() {
+                                        console.log("--------------------- FIN INSERTION BDD ---------------------")
+                                        return resolve(true);
+                                    })
+                                })
+                            })
+                        })
+                    })
+                })
+            })
+        })
+    }
+}
+
+module.exports = {
+    insert: function(json, orderId) {
+        return new Promise(function(resolve, reject) {
+            console.log("--------------------- DEBUT INSERTION BDD ---------------------")
+            initReferencesTypes(json).then(function(resReferencesTypes) {
                 return initFormats(json)
             }).then(function() {
                 return initReferences(json)
@@ -74,7 +98,7 @@ var initFormats = function(json) {
     })
 }
 
-var initReferences = function(json) {
+var initReferences = function(json, referencesTypes, formats) {
     return new Promise(function(resolve, reject) {
         console.log("********** Insertion References Début **********")
         // insertion des  references
@@ -83,8 +107,8 @@ var initReferences = function(json) {
         var tabReferencesTypes = [];
 
         for (reference of json.candidats) {
-            tabFormats.push(researchFormatId(reference.paperSize));
-            tabReferencesTypes.push(researchReferenceTypeId(reference.label));
+            tabFormats.push(researchFormatId(formats, reference.paperSize));
+            tabReferencesTypes.push(researchReferenceTypeId(referencesTypes, reference.label));
         }
         Promise.all(tabFormats).then(function(resFormats) {
             Promise.all(tabReferencesTypes).then(function(resReferencesTypes) {
@@ -114,40 +138,24 @@ var initReferences = function(json) {
     })
 }
 
-var researchFormatId = function(formatLabel) {
-    // recherche l'id format selon le libellé du format passé en paramètres
-    return new Promise(function(resolve, reject) {
-        Format.find({
-                attributes: ["id"],
-                where: {
-                    label: formatLabel
-                }
-            }).then(function(res) {
-                return resolve(res.id);
-            })
-            .catch(function(err) {
-                console.log("********** research Format Erreur **********")
-                return reject(err);
-            });
-    })
+var researchFormatId = function(tabFormats, formatLabel) {
+    // recherche l'id format selon le libellé
+    for (formats of tabFormats) {
+        if (formats.format.label == formatLabel) {
+            return formats.format.id;
+        }
+    }
+    return false;
 }
 
-var researchReferenceTypeId = function(referenceTypeLabel) {
-    // recherche l'id referenceType selon le libellé du format passé en paramètres
-    return new Promise(function(resolve, reject) {
-        ReferenceType.find({
-                attributes: ["id"],
-                where: {
-                    label: referenceTypeLabel
-                }
-            }).then(function(res) {
-                return resolve(res.id);
-            })
-            .catch(function(err) {
-                console.log("********** research Reference Erreur **********")
-                return reject(err);
-            });
-    });
+var researchReferenceTypeId = function(tabReferenceTypes, referenceTypeLabel) {
+    // recherche l'id referenceType selon le libellé
+    for (referenceTypes of tabReferenceTypes) {
+        if (referenceTypes.format.label == referenceTypeLabel) {
+            return referenceTypes.referenceType.id;
+        }
+    }
+    return false;
 }
 
 var initDistributors = function(json) {
