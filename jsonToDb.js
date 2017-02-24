@@ -13,7 +13,7 @@ module.exports = {
                             initDistricts(json, orderId).then(function() {
                                 initCities(json).then(function() {
                                     initCityReferences(json).then(function() {
-                                        console.log("--------------------- FIN INSERTION BDD ---------------------")
+                                        console.log("--------------------- FIN INSERTION BDD --------------------")
                                         return resolve(true);
                                     })
                                 })
